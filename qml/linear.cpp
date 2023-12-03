@@ -8,7 +8,7 @@
 
 int foo(int *A, int n) {
   unsigned sum = 0;
-  // #pragma clang loop vectorize(enable)
+#pragma clang loop vectorize(enable)
   for (int i = 0; i < n; ++i)
     sum += A[i] + 5;
   return sum;
@@ -22,7 +22,7 @@ void Linear::apply(F_TY *input) {
     // assert(!isbadf(this->bias[i]));
     F_TY *w_on = this->weights + i * isize;
     F_TY r = 0;
-    // #pragma clang loop vectorize(enable)
+#pragma clang loop vectorize(enable)
     for (int j = 0; j < isize; j++) {
       r += w_on[j] * input[j];
       // assert(!isinf(w_on[j]));

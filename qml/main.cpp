@@ -33,7 +33,7 @@ double calc_loss(Model model, int trials) {
 void test_training() {
   Model md;
   int input_size = 5;
-  int l1_size = 20;
+  int l1_size = 200;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
   Relu *r1 = new Relu(l1_size);
   Linear *l2 = new Linear(l1_size, 1, -1, 1, -1, 1);
@@ -43,6 +43,7 @@ void test_training() {
   int num_val = 100;
   double total_loss = 0;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
+  size_t t1 = microtime();
   for (int i = 0; i < num_trains; i++) {
     for (int j = 0; j < input_size; j++) {
       input[j] = rand_f();
@@ -51,7 +52,9 @@ void test_training() {
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
     md.train_on_input(input, &correct_output, 0.1);
   }
+  size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, 1000));
+  printf("Trained in %lu microseconds\n", t2 - t1);
 }
 
 int main() { test_training(); }

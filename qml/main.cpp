@@ -1,3 +1,6 @@
+#include "linear.hpp"
+#include "model.hpp"
+#include "utils.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,3 +15,31 @@ void apply_relu_inplace(Relu layer, double *input) {
     input[i] *= input[i] >= 0;
   }
 }
+
+// learn: 1, 1, 0, 0
+
+void test_training() {
+  Model md;
+  md.layers = std::vector<Layer *>();
+  int input_size = 2;
+  Linear *l = new Linear(input_size, 1, -1, 1, -1, 1);
+  md.layers.push_back(l);
+  double *input = (double *)malloc(input_size * sizeof(double));
+  double real_weights[] = {0.3, -0.8};
+  double real_bias = -0.1;
+  int num_trains = 10;
+  printf("Starting...\n");
+  fflush(stdout);
+  for (int i = 0; i < num_trains; i++) {
+    for (int j = 0; j < input_size; j++) {
+      input[j] = rand_f();
+    }
+    double correct_output = real_bias;
+    for (int j = 0; j < input_size; j++) {
+      correct_output += real_weights[j] * input[j];
+    }
+    md.train_on_input(input, &correct_output, 0.1);
+  }
+}
+
+int main() { test_training(); }

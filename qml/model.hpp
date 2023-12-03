@@ -5,7 +5,7 @@
 #include <vector>
 
 struct Model {
-  std::vector<Layer> layers;
+  std::vector<Layer *> layers;
   void train_on_input(double *input, double *correct_output, double lr);
   double *forwards(double *input);
 

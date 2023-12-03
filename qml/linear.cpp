@@ -1,4 +1,5 @@
 #include "linear.hpp"
+#include "utils.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,5 +47,23 @@ void Linear::step(double step_size) {
   }
   for (int i = 0; i < this->output_size; i++) {
     this->bias[i] -= step_size * this->grad[i];
+  }
+}
+
+Linear::Linear(int input_size, int output_size, double min_weight,
+               double max_weight, double min_bias, double max_bias) {
+  this->input_size = input_size;
+  this->output_size = output_size;
+  this->weights = (double *)malloc(input_size * output_size * sizeof(double));
+  this->weight_grad =
+      (double *)malloc(input_size * output_size * sizeof(double));
+  this->bias = (double *)malloc(output_size * sizeof(double));
+  this->val = (double *)malloc(output_size * sizeof(double));
+  this->grad = (double *)malloc(output_size * sizeof(double));
+  for (int i = 0; i < input_size * output_size; i++) {
+    this->weights[i] = rand_f() * (max_weight - min_weight) + min_weight;
+  }
+  for (int i = 0; i < output_size; i++) {
+    this->bias[i] = rand_f() * (max_bias - min_bias) + min_bias;
   }
 }

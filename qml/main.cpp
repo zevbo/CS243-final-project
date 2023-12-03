@@ -13,8 +13,8 @@
 #define MAX(a, b) (a > b ? a : b)
 
 double function(double *input) {
-  return 2 * input[0] / MAX(0.5, input[4]) + input[1] * input[3] -
-         input[3] * input[2] * 0.5 - 0.1 * input[4];
+  return 2 * input[0] / MAX(0.1, input[1]) + input[1] * input[0] -
+         input[0] * input[1] * 0.5 - 0.1 * input[1];
 }
 
 double calc_loss(Model model, int trials) {
@@ -33,15 +33,16 @@ double calc_loss(Model model, int trials) {
 void test_training() {
   Model md;
   int input_size = 5;
-  int l1_size = 20;
+  int l1_size = 2;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
-  Relu *r1 = new Relu(l1_size);
+  //   Relu *r1 = new Relu(l1_size);
   Linear *l2 = new Linear(l1_size, 1, -1, 1, -1, 1);
-  md.layers = std::vector<Layer *>{l1, r1, l2};
+  md.layers = std::vector<Layer *>{l1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 10000;
-  int num_val = 100;
+  int num_trains = 10;
+  int num_val = 0;
   double total_loss = 0;
+  double lr = 0.1;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   for (int i = 0; i < num_trains; i++) {
     for (int j = 0; j < input_size; j++) {
@@ -49,9 +50,9 @@ void test_training() {
     }
     double correct_output = function(input);
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
-    md.train_on_input(input, &correct_output, 0.1);
+    md.train_on_input(input, &correct_output, lr);
   }
-  printf("Loss at end: %f\n", calc_loss(md, 1000));
+  printf("Loss at end: %f\n", calc_loss(md, num_val));
 }
 
 int main() { test_training(); }

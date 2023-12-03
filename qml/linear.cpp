@@ -1,5 +1,7 @@
 #include "linear.hpp"
 #include "utils.hpp"
+#include <assert.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,12 +9,17 @@
 void Linear::apply(double *input) {
   double *output = this->val;
   for (int i = 0; i < this->output_size; i++) {
+    assert(!isbadf(this->bias[i]));
     double r = 0;
     double *w_on = this->weights + i * this->input_size;
     for (int j = 0; j < this->input_size; j++) {
       r += w_on[j] * input[j];
+      assert(!isinf(w_on[j]));
+      assert(!isinf(input[j]));
+      assert(!isbadf(r));
     }
     output[i] = r + this->bias[i];
+    assert(!isbadf(output[i]));
   }
 }
 
@@ -32,11 +39,21 @@ void Linear::update_input_grad(double *input, double *input_grad) {
     double *w_grad_on = this->weight_grad + i * this->input_size;
     double g = this->grad[i];
     for (int j = 0; j < this->input_size; j++) {
+
       if (input_grad != NULL) {
         input_grad[j] += g * w_on[j];
+        assert(!isbadf(input_grad[j]));
       }
       w_grad_on[j] += g * input[j];
+      assert(!isbadf(w_grad_on[j]));
     }
+  }
+  if (input_grad != NULL) {
+    printf("Input grad: ");
+    for (int j = 0; j < this->input_size; j++) {
+      printf("%f, ", input_grad[j]);
+    }
+    printf("\n");
   }
 }
 
@@ -44,6 +61,7 @@ void Linear::step(double step_size) {
   size_t s = this->input_size * this->output_size;
   for (int i = 0; i < s; i++) {
     this->weights[i] -= step_size * this->weight_grad[i];
+    assert(!isbadf(this->weights[i]));
   }
   for (int i = 0; i < this->output_size; i++) {
     this->bias[i] -= step_size * this->grad[i];

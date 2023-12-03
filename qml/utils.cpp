@@ -1,6 +1,8 @@
+#include "utils.hpp"
 #include "stdlib.h"
 #include "sys/timeb.h"
 #include "time.h"
+#include <math.h>
 
 uint64_t microtime() {
   // struct timeb t;
@@ -14,3 +16,5 @@ uint64_t microtime() {
 float rand_f() {
   return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
+
+bool isbadf(double d) { return isnan(d) || isinf(d) || abs(d) > 10000000; }

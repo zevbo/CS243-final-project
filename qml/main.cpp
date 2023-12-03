@@ -44,6 +44,7 @@ void test_training() {
   double total_loss = 0;
   double lr = 0.01;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
+  size_t t1 = microtime();
   for (int i = 0; i < num_trains; i++) {
     for (int j = 0; j < input_size; j++) {
       input[j] = rand_f();
@@ -52,7 +53,9 @@ void test_training() {
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
     md.train_on_input(input, &correct_output, lr);
   }
+  size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, num_val));
+  printf("Total train time: %d microseconds\n", t2 - t1);
 }
 
 int main() { test_training(); }

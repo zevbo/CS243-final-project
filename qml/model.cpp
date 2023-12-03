@@ -44,8 +44,8 @@ void Model::train_on_input(double *input, double *correct_output, double lr) {
   this->zero_grad();
   double *output = forwards(input);
   int output_sz = this->layers[this->layers.size() - 1]->output_size;
-  printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
-         msl_loss(output_sz, output, correct_output));
+  // printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
+  //        msl_loss(output_sz, output, correct_output));
   double *loss_grad = msl_grad(output_sz, output, correct_output);
   this->backwards(input, loss_grad);
   free(loss_grad);

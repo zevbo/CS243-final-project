@@ -44,6 +44,8 @@ void test_training() {
   double total_loss = 0;
   double lr = 0.01;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
+  size_t c1 = 0;
+  size_t c2 = 0;
   size_t t1 = microtime();
   for (int i = 0; i < num_trains; i++) {
     for (int j = 0; j < input_size; j++) {
@@ -51,11 +53,14 @@ void test_training() {
     }
     double correct_output = function(input);
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
-    md.train_on_input(input, &correct_output, lr);
+    std::pair<int, int> t = md.train_on_input(input, &correct_output, lr);
+    c1 += t.first;
+    c2 += t.second;
   }
   size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, num_val));
-  printf("Total train time: %d microseconds\n", t2 - t1);
+  printf("Total train time: %d microseconds. Breakdown: %d, %d\n", t2 - t1, c1,
+         c2);
 }
 
 int main() { test_training(); }

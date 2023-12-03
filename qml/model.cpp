@@ -1,6 +1,7 @@
 #include "model.hpp"
 #include "layer.hpp"
 #include "msl.hpp"
+#include "utils.hpp"
 #include <algorithm>
 #include <vector>
 
@@ -56,9 +57,11 @@ F_TY *Model::qforwards(F_TY *input) {
   return values_on;
 }
 
-void Model::train_on_input(double *input, double *correct_output, double lr) {
+std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
+                                          double lr) {
   this->zero_grad();
   F_TY *real_input = convert_input(this, input);
+  size_t t1 = microtime();
   F_TY *output = qforwards(real_input);
   int output_sz = this->layers[this->layers.size() - 1]->output_size;
   // printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
@@ -67,10 +70,13 @@ void Model::train_on_input(double *input, double *correct_output, double lr) {
   for (int i = 0; i < output_sz; i++) {
     double_output[i] = (double)output[i];
   }
+  size_t t2 = microtime();
   double *loss_grad = msl_grad(output_sz, double_output, correct_output);
   this->backwards(real_input, loss_grad);
   free(loss_grad);
   this->step(lr);
+  size_t t3 = microtime();
   free(real_input);
   free(double_output);
+  return std::pair<int, int>(t2 - t1, t3 - t2);
 }

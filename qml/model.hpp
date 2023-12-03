@@ -6,7 +6,8 @@
 
 struct Model {
   std::vector<Layer *> layers;
-  void train_on_input(double *input, double *correct_output, double lr);
+  std::pair<int, int> train_on_input(double *input, double *correct_output,
+                                     double lr);
   F_TY *forwards(double *input);
 
 protected:

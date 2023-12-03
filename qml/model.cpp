@@ -47,10 +47,7 @@ void Model::train_on_input(double *input, double *correct_output, double lr) {
   printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
          msl_loss(output_sz, output, correct_output));
   double *loss_grad = msl_grad(output_sz, output, correct_output);
-  printf("T3\n");
   this->backwards(input, loss_grad);
-  printf("T4\n");
   free(loss_grad);
   this->step(lr);
-  printf("T5\n");
 }

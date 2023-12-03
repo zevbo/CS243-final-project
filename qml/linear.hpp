@@ -13,10 +13,10 @@ public:
   void step(double step_size) override;
   Linear(int input_size, int output_size, double min_weight, double max_weight,
          double min_bias, double max_bias);
-
-private:
   double *weights;
   double *bias;
+
+private:
   double *val;
   double *grad; // equal to the bias grad
   double *weight_grad;

@@ -13,8 +13,8 @@
 #define MAX(a, b) (a > b ? a : b)
 
 double function(double *input) {
-  return 2 * input[0] / MAX(0.1, input[1]) + input[1] * input[0] -
-         input[0] * input[1] * 0.5 - 0.1 * input[1];
+  return 2 * input[0] / MAX(0.5, input[4]) + input[1] * input[3] -
+         input[3] * input[2] * 0.5 - 0.1 * input[4];
 }
 
 double calc_loss(Model model, int trials) {
@@ -39,7 +39,7 @@ void test_training() {
   Linear *l2 = new Linear(l1_size, 1, -1, 1, -1, 1);
   md.layers = std::vector<Layer *>{l1, r1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 1000;
+  int num_trains = 10000;
   int num_val = 1000;
   double total_loss = 0;
   double lr = 0.01;

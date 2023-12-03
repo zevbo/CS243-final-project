@@ -6,12 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-void Linear::apply(double *input) {
-  double *output = this->val;
+void Linear::apply(F_TY *input) {
+  F_TY *output = this->val;
   for (int i = 0; i < this->output_size; i++) {
     assert(!isbadf(this->bias[i]));
     double r = 0;
-    double *w_on = this->weights + i * this->input_size;
+    F_TY *w_on = this->weights + i * this->input_size;
     for (int j = 0; j < this->input_size; j++) {
       r += w_on[j] * input[j];
       assert(!isinf(w_on[j]));
@@ -31,11 +31,11 @@ void Linear::zero_grad() {
 
 double *Linear::grad_ptr() { return this->grad; }
 
-double *Linear::output() { return this->val; }
+F_TY *Linear::output() { return this->val; }
 
-void Linear::update_input_grad(double *input, double *input_grad) {
+void Linear::update_input_grad(F_TY *input, double *input_grad) {
   for (int i = 0; i < this->output_size; i++) {
-    double *w_on = this->weights + i * this->input_size;
+    F_TY *w_on = this->weights + i * this->input_size;
     double *w_grad_on = this->weight_grad + i * this->input_size;
     double g = this->grad[i];
     for (int j = 0; j < this->input_size; j++) {
@@ -65,11 +65,11 @@ Linear::Linear(int input_size, int output_size, double min_weight,
                double max_weight, double min_bias, double max_bias) {
   this->input_size = input_size;
   this->output_size = output_size;
-  this->weights = (double *)malloc(input_size * output_size * sizeof(double));
+  this->weights = (F_TY *)malloc(input_size * output_size * sizeof(F_TY));
   this->weight_grad =
       (double *)malloc(input_size * output_size * sizeof(double));
-  this->bias = (double *)malloc(output_size * sizeof(double));
-  this->val = (double *)malloc(output_size * sizeof(double));
+  this->bias = (F_TY *)malloc(output_size * sizeof(F_TY));
+  this->val = (F_TY *)malloc(output_size * sizeof(F_TY));
   this->grad = (double *)malloc(output_size * sizeof(double));
   for (int i = 0; i < input_size * output_size; i++) {
     this->weights[i] = rand_f() * (max_weight - min_weight) + min_weight;

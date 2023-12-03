@@ -7,10 +7,11 @@
 struct Model {
   std::vector<Layer *> layers;
   void train_on_input(double *input, double *correct_output, double lr);
-  double *forwards(double *input);
+  F_TY *forwards(double *input);
 
 protected:
-  void backwards(double *input, double *loss_grad);
+  F_TY *qforwards(F_TY *input);
+  void backwards(F_TY *input, double *loss_grad);
   void step(double step_size);
   void zero_grad();
 };

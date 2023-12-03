@@ -2,7 +2,7 @@
 #define LAYER_H
 #include <string.h>
 
-#define F_TY double
+#define F_TY long
 
 struct Layer {
 public:

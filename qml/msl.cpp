@@ -21,7 +21,7 @@ double *msl_grad(int sz, double *output, double *expected) {
   double *grad = (double *)malloc(sz * sizeof(double));
   for (int i = 0; i < sz; i++) {
     grad[i] = 2 * (output[i] - expected[i]);
-    assert(!isbadf(grad[i]));
+    // assert(!isbadf(grad[i]));
   }
   return grad;
 }

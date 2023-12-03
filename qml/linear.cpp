@@ -6,20 +6,31 @@
 #include <stdlib.h>
 #include <string.h>
 
+int foo(int *A, int n) {
+  unsigned sum = 0;
+  // #pragma clang loop vectorize(enable)
+  for (int i = 0; i < n; ++i)
+    sum += A[i] + 5;
+  return sum;
+}
+
 void Linear::apply(F_TY *input) {
   F_TY *output = this->val;
-  for (int i = 0; i < this->output_size; i++) {
-    assert(!isbadf(this->bias[i]));
-    double r = 0;
-    F_TY *w_on = this->weights + i * this->input_size;
-    for (int j = 0; j < this->input_size; j++) {
+  size_t osize = this->output_size;
+  size_t isize = this->input_size;
+  for (int i = 0; i < osize; i++) {
+    // assert(!isbadf(this->bias[i]));
+    F_TY *w_on = this->weights + i * isize;
+    F_TY r = 0;
+    // #pragma clang loop vectorize(enable)
+    for (int j = 0; j < isize; j++) {
       r += w_on[j] * input[j];
-      assert(!isinf(w_on[j]));
-      assert(!isinf(input[j]));
-      assert(!isbadf(r));
+      // assert(!isinf(w_on[j]));
+      // assert(!isinf(input[j]));
+      // assert(!isbadf(r));
     }
     output[i] = r + this->bias[i];
-    assert(!isbadf(output[i]));
+    // assert(!isbadf(output[i]));
   }
 }
 
@@ -42,10 +53,10 @@ void Linear::update_input_grad(F_TY *input, double *input_grad) {
 
       if (input_grad != NULL) {
         input_grad[j] += g * w_on[j];
-        assert(!isbadf(input_grad[j]));
+        // assert(!isbadf(input_grad[j]));
       }
       w_grad_on[j] += g * input[j];
-      assert(!isbadf(w_grad_on[j]));
+      // assert(!isbadf(w_grad_on[j]));
     }
   }
 }
@@ -54,7 +65,7 @@ void Linear::step(double step_size) {
   size_t s = this->input_size * this->output_size;
   for (int i = 0; i < s; i++) {
     this->weights[i] -= step_size * this->weight_grad[i];
-    assert(!isbadf(this->weights[i]));
+    // assert(!isbadf(this->weights[i]));
   }
   for (int i = 0; i < this->output_size; i++) {
     this->bias[i] -= step_size * this->grad[i];

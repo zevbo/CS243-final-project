@@ -63,6 +63,7 @@ std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
   F_TY *real_input = convert_input(this, input);
   size_t t1 = microtime();
   F_TY *output = qforwards(real_input);
+  size_t t2 = microtime();
   int output_sz = this->layers[this->layers.size() - 1]->output_size;
   // printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
   //        msl_loss(output_sz, output, correct_output));
@@ -70,7 +71,6 @@ std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
   for (int i = 0; i < output_sz; i++) {
     double_output[i] = (double)output[i];
   }
-  size_t t2 = microtime();
   double *loss_grad = msl_grad(output_sz, double_output, correct_output);
   this->backwards(real_input, loss_grad);
   free(loss_grad);

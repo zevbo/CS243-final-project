@@ -1,8 +1,9 @@
 #ifndef LAYER_H
 #define LAYER_H
+#include <stdint.h>
 #include <string.h>
 
-#define F_TY long
+#define F_TY int8_t
 
 struct Layer {
 public:

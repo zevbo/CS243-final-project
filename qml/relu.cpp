@@ -7,7 +7,7 @@
 void Relu::apply(F_TY *input) {
   F_TY *output = this->val;
   for (int i = 0; i < this->size; i++) {
-    double v = input[i];
+    F_TY v = input[i];
     output[i] = v * (v > 0);
   }
 }

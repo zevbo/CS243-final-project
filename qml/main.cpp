@@ -34,14 +34,16 @@ void test_training() {
   Model md;
   int input_size = 5;
   int l1_size = 200;
+  int l2_size = 200;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
   Relu *r1 = new Relu(l1_size);
-  Linear *l2 = new Linear(l1_size, 1, -1, 1, -1, 1);
-  md.layers = std::vector<Layer *>{l1, r1, l2};
+  Linear *l2 = new Linear(l1_size, l2_size, -1, 1, -1, 1);
+  Relu *r2 = new Relu(l2_size);
+  Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
+  md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 10000;
-  int num_val = 1000;
-  double total_loss = 0;
+  int num_trains = 100;
+  int num_val = 100;
   double lr = 0.01;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   size_t c1 = 0;
@@ -59,8 +61,40 @@ void test_training() {
   }
   size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, num_val));
-  printf("Total train time: %d microseconds. Breakdown: %d, %d\n", t2 - t1, c1,
-         c2);
+  size_t t3 = microtime();
+  printf("Calc loss time: %lu\n", t3 - t2);
+  printf("Total train time: %zu microseconds. Breakdown: %zu, %zu\n", t2 - t1,
+         c1, c2);
 }
 
-int main() { test_training(); }
+#define TY int
+void stupid_benchmark() {
+  int num_numbers = 1000;
+  TY p[num_numbers];
+  for (int i = 0; i < num_numbers; i++) {
+    p[i] = (TY)(rand_f() * 100 - 50);
+  }
+  TY p2[num_numbers];
+#pragma clang loop vectorize(enable)
+  for (int i = 0; i < num_numbers; i++) {
+    p2[i] = p[i];
+  }
+
+  size_t t1 = microtime();
+  TY sum = 0;
+  for (int i = 0; i < num_numbers; i++) {
+    for (int j = 0; j < num_numbers; j++) {
+      sum += p[i];
+      sum += p[j];
+      sum -= p[i];
+      sum -= p[j];
+    }
+  }
+  size_t t2 = microtime();
+  printf("Total time: %lu. Sum %f\n", t2 - t1, (float)sum);
+}
+
+int main() {
+  stupid_benchmark();
+  // test_training();
+}

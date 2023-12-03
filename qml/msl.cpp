@@ -19,13 +19,8 @@ double msl_loss(int sz, double *output, double *expected) {
 }
 double *msl_grad(int sz, double *output, double *expected) {
   double *grad = (double *)malloc(sz * sizeof(double));
-  printf("Output, expected: %f, %f\n", output[0], expected[0]);
   for (int i = 0; i < sz; i++) {
     grad[i] = 2 * (output[i] - expected[i]);
-    printf("Grad[%d]: %f\n", i, grad[i]);
-    if (isbadf(grad[i])) {
-      printf("Nan grad: %f, %f\n", output[i], expected[i]);
-    }
     assert(!isbadf(grad[i]));
   }
   return grad;

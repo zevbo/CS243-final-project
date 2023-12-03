@@ -48,13 +48,6 @@ void Linear::update_input_grad(double *input, double *input_grad) {
       assert(!isbadf(w_grad_on[j]));
     }
   }
-  if (input_grad != NULL) {
-    printf("Input grad: ");
-    for (int j = 0; j < this->input_size; j++) {
-      printf("%f, ", input_grad[j]);
-    }
-    printf("\n");
-  }
 }
 
 void Linear::step(double step_size) {

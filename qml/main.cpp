@@ -33,16 +33,16 @@ double calc_loss(Model model, int trials) {
 void test_training() {
   Model md;
   int input_size = 5;
-  int l1_size = 2;
+  int l1_size = 200;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
-  //   Relu *r1 = new Relu(l1_size);
+  Relu *r1 = new Relu(l1_size);
   Linear *l2 = new Linear(l1_size, 1, -1, 1, -1, 1);
-  md.layers = std::vector<Layer *>{l1, l2};
+  md.layers = std::vector<Layer *>{l1, r1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 10;
-  int num_val = 0;
+  int num_trains = 1000;
+  int num_val = 1000;
   double total_loss = 0;
-  double lr = 0.1;
+  double lr = 0.01;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   for (int i = 0; i < num_trains; i++) {
     for (int j = 0; j < input_size; j++) {

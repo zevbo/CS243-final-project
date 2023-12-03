@@ -40,8 +40,8 @@ void test_training() {
   md.layers = std::vector<Layer *>{l1, r1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 10000;
-  int num_val = 100;
-  double total_loss = 0;
+  int num_val = 1000;
+  double lr = 0.01;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   size_t t1 = microtime();
   for (int i = 0; i < num_trains; i++) {
@@ -50,10 +50,10 @@ void test_training() {
     }
     double correct_output = function(input);
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
-    md.train_on_input(input, &correct_output, 0.1);
+    md.train_on_input(input, &correct_output, lr);
   }
   size_t t2 = microtime();
-  printf("Loss at end: %f\n", calc_loss(md, 1000));
+  printf("Loss at end: %f\n", calc_loss(md, num_val));
   printf("Trained in %lu microseconds\n", t2 - t1);
 }
 

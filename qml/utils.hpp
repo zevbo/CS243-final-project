@@ -5,5 +5,6 @@
 
 uint64_t microtime();
 float rand_f();
+bool isbadf(double d);
 
 #endif

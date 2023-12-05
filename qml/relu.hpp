@@ -6,16 +6,16 @@
 struct Relu : public Layer {
 public:
   void zero_grad() override;
-  void apply(double *input) override;
-  double *output() override;
-  void update_input_grad(double *input, double *input_grad) override;
+  void apply(F_TY *input) override;
+  F_TY *output() override;
+  void update_input_grad(F_TY *input, double *input_grad) override;
   double *grad_ptr() override;
   void step(double step_size) override;
   Relu(int size);
   int size;
 
 private:
-  double *val;
+  F_TY *val;
   double *grad;
 };
 

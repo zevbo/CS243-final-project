@@ -1,10 +1,11 @@
 #include "model.hpp"
 #include "layer.hpp"
 #include "msl.hpp"
+#include "utils.hpp"
 #include <algorithm>
 #include <vector>
 
-void Model::backwards(double *input, double *loss_grad) {
+void Model::backwards(F_TY *input, double *loss_grad) {
   Layer *last_layer = this->layers[this->layers.size() - 1];
   memcpy(last_layer->grad_ptr(), loss_grad,
          last_layer->output_size * sizeof(double));
@@ -31,8 +32,24 @@ void Model::zero_grad() {
   }
 }
 
-double *Model::forwards(double *input) {
-  double *values_on = input;
+F_TY *convert_input(Model *model, double *input) {
+  F_TY *real_input =
+      (F_TY *)malloc(model->layers[0]->input_size * sizeof(F_TY));
+  for (int i = 0; i < model->layers[0]->input_size; i++) {
+    real_input[i] = (F_TY)input[i];
+  }
+  return real_input;
+}
+
+F_TY *Model::forwards(double *input) {
+  F_TY *real_input = convert_input(this, input);
+  F_TY *res = this->qforwards(real_input);
+  free(real_input);
+  return res;
+}
+
+F_TY *Model::qforwards(F_TY *input) {
+  F_TY *values_on = input;
   for (Layer *layer : this->layers) {
     layer->apply(values_on);
     values_on = layer->output();
@@ -40,14 +57,26 @@ double *Model::forwards(double *input) {
   return values_on;
 }
 
-void Model::train_on_input(double *input, double *correct_output, double lr) {
+std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
+                                          double lr) {
   this->zero_grad();
-  double *output = forwards(input);
+  F_TY *real_input = convert_input(this, input);
+  size_t t1 = microtime();
+  F_TY *output = qforwards(real_input);
+  size_t t2 = microtime();
   int output_sz = this->layers[this->layers.size() - 1]->output_size;
   // printf("F %f, %f [loss %f]\n", output[0], correct_output[0],
   //        msl_loss(output_sz, output, correct_output));
-  double *loss_grad = msl_grad(output_sz, output, correct_output);
-  this->backwards(input, loss_grad);
+  double *double_output = (double *)malloc(sizeof(double) * output_sz);
+  for (int i = 0; i < output_sz; i++) {
+    double_output[i] = (double)output[i];
+  }
+  double *loss_grad = msl_grad(output_sz, double_output, correct_output);
+  this->backwards(real_input, loss_grad);
   free(loss_grad);
   this->step(lr);
+  size_t t3 = microtime();
+  free(real_input);
+  free(double_output);
+  return std::pair<int, int>(t2 - t1, t3 - t2);
 }

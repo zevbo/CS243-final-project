@@ -3,15 +3,23 @@ import math
 import numpy as np
 import random
 import tensorflow as tf
+import tensorflow_model_optimization as tfmot
+
 
 
 ModelT = tf.keras.Model
 
+QUANTIZE = False
 INPUT_SIZE = 5
 def benchmark_1_model() -> ModelT:
     model = tf.keras.models.Sequential()
-    model.add(tf.keras.layers.Dense(units=1, input_dim=INPUT_SIZE, activation='linear'))
-    op = tf.keras.optimizers.legacy.SGD()
+    d = tf.keras.layers.Dense(units=1, input_dim=INPUT_SIZE, activation='linear')
+    if QUANTIZE: 
+        d = tfmot.quantization.keras.quantize_annotate_layer(d)
+    model.add(d)
+    op = tf.keras.optimizers.legacy.SGD(learning_rate=0.001)
+    if QUANTIZE:
+        model = tfmot.quantization.keras.quantize_apply(model)
     model.compile(optimizer=op, loss='mean_squared_error')
     return model
 
@@ -78,12 +86,12 @@ def run_benchmark() -> None:
     # print(model.fc1.state_dict()['bias'].numpy())
     # train_model(model, optimizer, 1000)
     model = benchmark_1_model()
-    d : tf.keras.layers.Dense = model.layers[0]
+    d : tf.keras.layers.Dense = model.layers[1 if QUANTIZE else 0]
     # print(f"{d.weights = }")
+    print(f"{type(d) = } {d.get_weights() = }")
     w = np.array([[0.23043269, -0.19739035, -0.08669749,  0.20990819, -0.42102337]]).T
-    d.set_weights([w,  np.array([0.2682017])])
+    # d.set_weights([w,  np.array([0.2682017])])
     test_loss(model)
-    # print(f"{d.get_weights() = }")
     # d.set_weights([[0.23043269, -0.19739035, -0.08669749,  0.20990819, -0.42102337]])
     # [0.2682017]
     # l = calc_loss(model, 100)

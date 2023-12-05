@@ -64,25 +64,33 @@ void Linear::update_input_grad(F_TY *input, double *input_grad) {
 
 void Linear::step(double step_size) {
   size_t s = this->input_size * this->output_size;
+  // printf("Linear weight stuff %p: ", this);
   for (int i = 0; i < s; i++) {
     IFQUANTIZE(
         {
-          this->weight_residuals[i] -= (F_TY)step_size * this->weight_grad[i];
+          // printf("%.2f[%.2f, %.2f], ", step_size * this->weight_grad[i],
+          //        this->weight_grad[i], this->weight_residuals[i]);
+          this->weight_residuals[i] -= step_size * this->weight_grad[i];
           F_TY w_diff = (F_TY)this->weight_residuals[i];
           this->weights[i] += w_diff;
           this->weight_residuals[i] -= w_diff;
+          // this->bias[i] -= (F_TY)(step_size * this->grad[i]);
+          // assert(w_diff == -1 * (F_TY)step_size * this->weight_grad[i]);
+          // this->weights[i] -= (F_TY)step_size * this->weight_grad[i];
         },
         { this->weights[i] -= (F_TY)step_size * this->weight_grad[i]; })
 
     tassert(!isbadf(this->weights[i]));
   }
+  // printf("\n");
   for (int i = 0; i < this->output_size; i++) {
     IFQUANTIZE(
         {
-          this->bias_residuals[i] -= (F_TY)step_size * this->grad[i];
-          F_TY r_diff = (F_TY)this->bias_residuals[i];
-          this->bias[i] += r_diff;
-          this->bias_residuals[i] -= r_diff;
+          // this->bias_residuals[i] -= step_size * this->grad[i];
+          // F_TY r_diff = (F_TY)this->bias_residuals[i];
+          // this->bias[i] += (F_TY)r_diff;
+          // this->bias_residuals[i] -= r_diff;
+          this->bias[i] -= (F_TY)(step_size * this->grad[i]);
         },
         { this->bias[i] -= (F_TY)(step_size * this->grad[i]); })
   }

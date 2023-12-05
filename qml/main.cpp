@@ -15,13 +15,14 @@
 #define MAX(a, b) (a > b ? a : b)
 
 double function(double *input) {
-  return 2 * input[0] / MAX(0.5, input[4]) + input[1] * sqrt(input[3]) -
-         input[2] * 0.5 - 0.1 * input[3];
+  // return 2 * input[0] / MAX(0.5, input[4]) + input[1] * sqrt(input[3]) -
+  //        input[2] * 0.5 - 0.1 * input[3];
+  return input[0] + input[1] + input[2] + input[3] + input[4];
 }
 
 void fill_input(double *input, int input_size) {
   for (int j = 0; j < input_size; j++) {
-    input[j] = rand_f();
+    input[j] = (rand_f() * 2 - 1) * 5;
   }
 }
 
@@ -41,20 +42,29 @@ double calc_loss(Model model, int trials) {
 void test_training() {
   Model md;
   int input_size = 5;
-  int l1_size = 1000;
-  int l2_size = 10;
-  Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
-  Tanh *r1 = new Tanh(l1_size, 20, 5);
-  Linear *l2 = new Linear(l1_size, l2_size, -1, 1, -1, 1);
-  Tanh *r2 = new Tanh(l2_size, 20, 5);
-  Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
-  md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
+  int l1_size = 10;
+  int l2_size = 100;
+  int l3_size = 10;
+  int weight_scale = 1;
+  int bias_scale = 1;
+#define L_PARAMS -weight_scale, weight_scale, -bias_scale, bias_scale
+  Linear *l1 = new Linear(input_size, l1_size, L_PARAMS);
+  // Tanh *r1 = new Tanh(l1_size, 20, 5);
+  Relu *r1 = new Relu(l1_size);
+  Linear *l2 = new Linear(l1_size, 1, L_PARAMS);
+  // Tanh *r2 = new Tanh(l2_size, 20, 5);
+  Relu *r2 = new Relu(l2_size);
+  Linear *l3 = new Linear(l2_size, l3_size, L_PARAMS);
+  // Tanh *r3 = new Tanh(l3_size, 20, 5);
+  Relu *r3 = new Relu(l3_size);
+  Linear *l4 = new Linear(l3_size, 1, L_PARAMS);
+  md.layers = std::vector<Layer *>{l1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 10000;
+  int num_trains = 5;
   int lr_decay_index = num_trains / 2;
   int num_val = 100;
   double lr = 0.01;
-  double decay_lr = 0.001;
+  double decay_lr = 0.0001;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   size_t c1 = 0;
   size_t c2 = 0;

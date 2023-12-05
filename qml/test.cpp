@@ -69,11 +69,11 @@ void run_test() {
   }
   double loss_at_end = calc_loss(md, num_val);
   double loss_cutoff = 0.1;
-  printf("Loss at end: %f. Should be less than %d.\n", loss_at_end,
+  printf("Loss at end: %f. Should be less than %f.\n", loss_at_end,
          loss_cutoff);
   if (loss_at_end < loss_cutoff) {
-    printf("PASSED");
+    printf("PASSED\n");
   } else {
-    printf("FAILED");
+    printf("FAILED\n");
   }
 }

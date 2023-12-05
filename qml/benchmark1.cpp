@@ -14,13 +14,13 @@
 #define MAX(a, b) (a > b ? a : b)
 
 static double function(double *input) {
-  return 5 * (2 * input[0] / MAX(0.5, input[4]) + input[1] * sqrt(input[3]) -
-              input[2] * 0.5 - 0.1 * input[3]);
+  return (2 * input[0] / MAX(0.5, input[4]) + input[1] * sqrt(input[3]) -
+          input[2] * 0.5 - 0.1 * input[3]);
 }
 
 static void fill_input(double *input, int input_size) {
   for (int j = 0; j < input_size; j++) {
-    input[j] = rand_f();
+    input[j] = rand_f() * 5;
   }
 }
 

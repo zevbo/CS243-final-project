@@ -41,7 +41,7 @@ def calc_loss(model: ModelT, num_val: int) -> float:
     return loss / num_val
 
 def train_model(model: ModelT, num_trains: int) -> None:
-    print(f"Loss at start: {calc_loss(model, 100)}")
+    print(f"Loss at start: {calc_loss(model, 1000)}")
     random.shuffle(training_data)
     # model.train()
 
@@ -64,7 +64,7 @@ def train_model(model: ModelT, num_trains: int) -> None:
     Ys = np.array(Ys)
 
     model.fit(Xs, Ys, batch_size= 1, epochs= 1)
-    print(f"Loss at end: {calc_loss(model, 100)}")
+    print(f"Loss at end: {calc_loss(model, 1000)}")
 
 def run_benchmark() -> None:
     np.random.seed(0)
@@ -82,7 +82,6 @@ def run_benchmark() -> None:
     # print(f"{d.weights = }")
     w = np.array([[0.23043269, -0.19739035, -0.08669749,  0.20990819, -0.42102337]]).T
     d.set_weights([w,  np.array([0.2682017])])
-
     test_loss(model)
     # print(f"{d.get_weights() = }")
     # d.set_weights([[0.23043269, -0.19739035, -0.08669749,  0.20990819, -0.42102337]])

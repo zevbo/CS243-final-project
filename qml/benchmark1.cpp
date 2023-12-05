@@ -78,9 +78,9 @@ void run_benchmark1() {
   md.layers = std::vector<Layer *>{l1};
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 1000;
-  int num_val = 100;
+  int num_val = 1000;
   double lr = 0.01;
-  print_linear_layer(l1);
+  // print_linear_layer(l1);
   test_input(md);
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   for (int i = 0; i < num_trains; i++) {

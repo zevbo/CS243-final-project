@@ -8,7 +8,6 @@
 
 int foo(int *A, int n) {
   unsigned sum = 0;
-#pragma clang loop vectorize(enable)
   for (int i = 0; i < n; ++i)
     sum += A[i] + 5;
   return sum;
@@ -19,18 +18,17 @@ void Linear::apply(F_TY *input) {
   size_t osize = this->output_size;
   size_t isize = this->input_size;
   for (int i = 0; i < osize; i++) {
-    // assert(!isbadf(this->bias[i]));
+    tassert(!isbadf(this->bias[i]));
     F_TY *w_on = this->weights + i * isize;
     F_TY r = 0;
-#pragma clang loop vectorize(enable)
     for (int j = 0; j < isize; j++) {
       r += w_on[j] * input[j];
-      // assert(!isinf(w_on[j]));
-      // assert(!isinf(input[j]));
-      // assert(!isbadf(r));
+      tassert(!isinf(w_on[j]));
+      tassert(!isinf(input[j]));
+      tassert(!isbadf(r));
     }
     output[i] = r + this->bias[i];
-    // assert(!isbadf(output[i]));
+    tassert(!isbadf(output[i]));
   }
 }
 
@@ -53,10 +51,10 @@ void Linear::update_input_grad(F_TY *input, double *input_grad) {
 
       if (input_grad != NULL) {
         input_grad[j] += g * w_on[j];
-        // assert(!isbadf(input_grad[j]));
+        tassert(!isbadf(input_grad[j]));
       }
       w_grad_on[j] += g * input[j];
-      // assert(!isbadf(w_grad_on[j]));
+      tassert(!isbadf(w_grad_on[j]));
     }
   }
 }
@@ -65,7 +63,7 @@ void Linear::step(double step_size) {
   size_t s = this->input_size * this->output_size;
   for (int i = 0; i < s; i++) {
     this->weights[i] -= step_size * this->weight_grad[i];
-    // assert(!isbadf(this->weights[i]));
+    tassert(!isbadf(this->weights[i]));
   }
   for (int i = 0; i < this->output_size; i++) {
     this->bias[i] -= step_size * this->grad[i];

@@ -17,12 +17,18 @@ double function(double *input) {
          input[3] * input[2] * 0.5 - 0.1 * input[4];
 }
 
+void fill_input(double *input, int input_size) {
+  for (int j = 0; j < input_size; j++) {
+    input[j] = rand_f() * 10;
+  }
+}
+
 double calc_loss(Model model, int trials) {
   int input_size = model.layers[0]->input_size;
   double *input = (double *)malloc(input_size * sizeof(double));
   double total_loss = 0;
   for (int i = 0; i < trials; i++) {
-    input[i] = rand_f();
+    fill_input(input, input_size);
     double correct_output = function(input);
     double r = model.forwards(input)[0];
     total_loss += (r - correct_output) * (r - correct_output);
@@ -33,8 +39,8 @@ double calc_loss(Model model, int trials) {
 void test_training() {
   Model md;
   int input_size = 5;
-  int l1_size = 200;
-  int l2_size = 200;
+  int l1_size = 100;
+  int l2_size = 100;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
   Relu *r1 = new Relu(l1_size);
   Linear *l2 = new Linear(l1_size, l2_size, -1, 1, -1, 1);
@@ -42,17 +48,15 @@ void test_training() {
   Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
   md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 100;
+  int num_trains = 10000;
   int num_val = 100;
-  double lr = 0.01;
+  double lr = 0.00001;
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   size_t c1 = 0;
   size_t c2 = 0;
   size_t t1 = microtime();
   for (int i = 0; i < num_trains; i++) {
-    for (int j = 0; j < input_size; j++) {
-      input[j] = rand_f();
-    }
+    fill_input(input, input_size);
     double correct_output = function(input);
     // printf("Trying with input: %f, %f\n", input[0], input[1]);
     std::pair<int, int> t = md.train_on_input(input, &correct_output, lr);
@@ -75,7 +79,6 @@ void stupid_benchmark() {
     p[i] = (TY)(rand_f() * 100 - 50);
   }
   TY p2[num_numbers];
-#pragma clang loop vectorize(enable)
   for (int i = 0; i < num_numbers; i++) {
     p2[i] = p[i];
   }
@@ -95,6 +98,6 @@ void stupid_benchmark() {
 }
 
 int main() {
-  stupid_benchmark();
-  // test_training();
+  // stupid_benchmark();
+  test_training();
 }

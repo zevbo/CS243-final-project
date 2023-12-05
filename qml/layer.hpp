@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define F_TY int8_t
+#define F_TY double
 
 struct Layer {
 public:

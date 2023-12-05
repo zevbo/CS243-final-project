@@ -43,9 +43,9 @@ void test_training() {
   int l1_size = 100;
   int l2_size = 100;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
-  Tanh *r1 = new Tanh(l1_size, 1, 1);
+  Tanh *r1 = new Tanh(l1_size, 5, 5);
   Linear *l2 = new Linear(l1_size, l2_size, -1, 1, -1, 1);
-  Tanh *r2 = new Tanh(l2_size, 1, 1);
+  Tanh *r2 = new Tanh(l2_size, 5, 5);
   Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
   md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
   double *input = (double *)malloc(input_size * sizeof(double));

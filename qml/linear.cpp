@@ -51,6 +51,9 @@ void Linear::update_input_grad(F_TY *input, double *input_grad) {
 
       if (input_grad != NULL) {
         input_grad[j] += g * w_on[j];
+        // if (isbadf(input_grad[j])) {
+        //   printf("Bad stuff: %f, %f, %f", input_grad[j], g, w_on[j]);
+        // }
         tassert(!isbadf(input_grad[j]));
       }
       w_grad_on[j] += g * input[j];

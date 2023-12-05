@@ -14,7 +14,7 @@
 #define MAX(a, b) (a > b ? a : b)
 
 double function(double *input) {
-  return 2 * input[0] / MAX(0.5, input[4]) + input[1] * input[3] -
+  return 2 * input[0] / MAX(0.5, input[4]) + input[1] * sqrt(input[3]) -
          input[2] * 0.5 - 0.1 * input[3];
 }
 
@@ -49,7 +49,7 @@ void test_training() {
   Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
   md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 10000;
+  int num_trains = 200;
   int lr_decay_index = num_trains / 2;
   int num_val = 100;
   double lr = 0.01;

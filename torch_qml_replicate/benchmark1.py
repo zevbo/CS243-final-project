@@ -24,7 +24,7 @@ def rand_input() -> Tensor:
 
 def function(t_: Tensor) -> float:
     t = t_.numpy()
-    return 2 * t[0] / max(0.5, t[4]) + t[1]  * math.sqrt(t[3]) - t[2] * 0.5 - 0.1 * t[3]
+    return 5 * (2 * t[0] / max(0.5, t[4]) + t[1]  * math.sqrt(t[3]) - t[2] * 0.5 - 0.1 * t[3])
 
 training_data = []
 quick_losses = []
@@ -60,7 +60,7 @@ def run_benchmark() -> None:
     np.random.seed(0)
     torch.random.manual_seed(1)
     model = Benchmark1Model()
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.SGD(model.parameters(), lr=0.001)
     print(model.fc1.state_dict()['weight'].numpy())
     print(model.fc1.state_dict()['bias'].numpy())
     train_model(model, optimizer, 1000)

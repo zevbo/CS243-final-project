@@ -1,6 +1,7 @@
 #include "linear.hpp"
 #include "model.hpp"
 #include "relu.hpp"
+#include "tanh.hpp"
 #include "utils.hpp"
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,9 +43,9 @@ void test_training() {
   int l1_size = 100;
   int l2_size = 100;
   Linear *l1 = new Linear(input_size, l1_size, -1, 1, -1, 1);
-  Relu *r1 = new Relu(l1_size);
+  Tanh *r1 = new Tanh(l1_size, 1, 1);
   Linear *l2 = new Linear(l1_size, l2_size, -1, 1, -1, 1);
-  Relu *r2 = new Relu(l2_size);
+  Tanh *r2 = new Tanh(l2_size, 1, 1);
   Linear *l3 = new Linear(l2_size, 1, -1, 1, -1, 1);
   md.layers = std::vector<Layer *>{l1, r1, l2, r2, l3};
   double *input = (double *)malloc(input_size * sizeof(double));

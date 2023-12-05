@@ -114,6 +114,6 @@ void stupid_benchmark() {
 
 int main() {
   // stupid_benchmark();
-  test_training();
-  // run_test();
+  // test_training();
+  run_test();
 }

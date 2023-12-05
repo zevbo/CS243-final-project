@@ -9,7 +9,7 @@ import tensorflow_model_optimization as tfmot
 
 ModelT = tf.keras.Model
 
-QUANTIZE = False
+QUANTIZE = True
 INPUT_SIZE = 5
 L1_SIZE = 10
 def benchmark_1_model() -> ModelT:
@@ -81,7 +81,7 @@ def train_model(model: ModelT, num_trains: int) -> None:
 def run_benchmark() -> None:
     np.random.seed(0)
     tf.random.set_seed(0)
-    tf.keras.utils.set_random_seed(1)
+    tf.keras.utils.set_random_seed(0)
     # tf.random.set_gl(0)
     # torch.random.manual_seed(1)
     # model = Benchmark1Model()
@@ -98,7 +98,7 @@ def run_benchmark() -> None:
     # [0.2682017]
     # l = calc_loss(model, 100)
     # print(f"{l = }")
-    train_model(model, 1000)
+    train_model(model, 10000)
     # model.compute_loss(i, np.array([function(i)]))
     # print(model(example))
 

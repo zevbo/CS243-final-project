@@ -64,7 +64,7 @@ void run_benchmark2() {
       new Linear(l1_size, 1, -weight_mag, weight_mag, -bias_mag, bias_mag);
   md.layers = std::vector<Layer *>{l1, r1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
-  int num_trains = 1000;
+  int num_trains = 10000;
   int num_val = 1000;
   double lr = 0.001;
   // print_linear_layer(l1);

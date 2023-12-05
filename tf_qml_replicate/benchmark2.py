@@ -12,7 +12,7 @@ ModelT = tf.keras.Model
 QUANTIZE = True
 INPUT_SIZE = 5
 L1_SIZE = 10
-def benchmark_1_model() -> ModelT:
+def benchmark_2_model() -> ModelT:
     model = tf.keras.models.Sequential()
     d1 = tf.keras.layers.Dense(units=L1_SIZE, input_dim=INPUT_SIZE, activation='relu')
     d2 = tf.keras.layers.Dense(units=1, input_dim=L1_SIZE, activation='linear')
@@ -89,7 +89,7 @@ def run_benchmark() -> None:
     # print(model.fc1.state_dict()['weight'].numpy())
     # print(model.fc1.state_dict()['bias'].numpy())
     # train_model(model, optimizer, 1000)
-    model = benchmark_1_model()
+    model = benchmark_2_model()
     d : tf.keras.layers.Dense = model.layers[1 if QUANTIZE else 0]
     # print(f"{d.weights = }")
     # d.set_weights([w,  np.array([0.2682017])])

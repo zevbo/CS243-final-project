@@ -58,6 +58,8 @@ void run_test() {
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   size_t c1 = 0;
   size_t c2 = 0;
+  (void)c1;
+  (void)c2;
   for (int i = 0; i < num_trains; i++) {
     fill_input(input, input_size);
     double correct_output = function(input);

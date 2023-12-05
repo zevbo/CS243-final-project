@@ -28,17 +28,17 @@ static double calc_loss(Model model, int trials) {
   int input_size = model.layers[0]->input_size;
   double *input = (double *)malloc(input_size * sizeof(double));
   double total_loss = 0;
-  printf("Results: ");
+  // printf("Results: ");
   for (int i = 0; i < trials; i++) {
     fill_input(input, input_size);
     double correct_output = function(input);
     double r = model.forwards(input)[0];
-    if (i < 10) {
-      printf("%f[%f], ", r, correct_output);
-    }
+    // if (i < 10) {
+    //   printf("%f[%f], ", r, correct_output);
+    // }
     total_loss += (r - correct_output) * (r - correct_output);
   }
-  printf("\n");
+  // printf("\n");
   return total_loss / trials;
 }
 
@@ -46,7 +46,8 @@ static void test_input(Model model) {
   double input[] = {0.3971, 0.7544, 0.5695, 0.4388, 0.6387};
   double correct_output = function(input);
   double r = model.forwards(input)[0];
-  printf("Test: %f, %f, ", r, correct_output);
+  printf("Test %f: %f, %f\n", r, correct_output,
+         (r - correct_output) * (r - correct_output));
 }
 
 void print_linear_layer(Linear *l) {
@@ -78,9 +79,9 @@ void run_benchmark1() {
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 1000;
   int num_val = 100;
-  double lr = 0.001;
+  double lr = 0.01;
   print_linear_layer(l1);
-  // test_input(md);
+  test_input(md);
   printf("Loss at start: %f\n", calc_loss(md, num_val));
   for (int i = 0; i < num_trains; i++) {
     fill_input(input, input_size);

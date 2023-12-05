@@ -22,12 +22,12 @@ void Linear::apply(F_TY *input) {
     F_TY *w_on = this->weights + i * isize;
     F_TY r = 0;
     for (int j = 0; j < isize; j++) {
-      r += ((int)w_on[j]) * ((int)input[j]);
+      r += w_on[j] * (input[j]);
       tassert(!isinf(w_on[j]));
       tassert(!isinf(input[j]));
       tassert(!isbadf(r));
     }
-    output[i] = r + (int)this->bias[i];
+    output[i] = r + this->bias[i];
     tassert(!isbadf(output[i]));
   }
 }

@@ -45,7 +45,7 @@ void test_training() {
   int l1_size = 10;
   int l2_size = 100;
   int l3_size = 10;
-  int weight_scale = 1;
+  int weight_scale = 2;
   int bias_scale = 1;
 #define L_PARAMS -weight_scale, weight_scale, -bias_scale, bias_scale
   Linear *l1 = new Linear(input_size, l1_size, L_PARAMS);
@@ -114,6 +114,6 @@ void stupid_benchmark() {
 
 int main() {
   // stupid_benchmark();
-  // test_training();
-  run_test();
+  test_training();
+  // run_test();
 }

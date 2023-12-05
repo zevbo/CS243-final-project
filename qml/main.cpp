@@ -19,7 +19,7 @@ double function(double *input) {
 
 void fill_input(double *input, int input_size) {
   for (int j = 0; j < input_size; j++) {
-    input[j] = rand_f() * 10;
+    input[j] = rand_f();
   }
 }
 

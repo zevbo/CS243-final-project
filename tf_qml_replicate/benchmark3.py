@@ -80,7 +80,7 @@ def calc_loss(model: ModelT) -> float:
 
 def train_model(model: ModelT) -> None:
     print(f"Loss at start: {calc_loss(model)}")
-    model.fit(ds_train, batch_size= 1, epochs=1)
+    model.fit(ds_train, batch_size= 1, epochs=1, validation_data=ds_test)
     # print(f"Loss at end: {calc_loss(model, 1000)}")
 
 def run_benchmark() -> None:

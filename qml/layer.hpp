@@ -1,9 +1,24 @@
 #ifndef LAYER_H
 #define LAYER_H
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
+#define QUANTIZE 0
+
+#if QUANTIZE
+#define F_TY int
+#else
 #define F_TY double
+#endif
+
+#if QUANTIZE
+#define IFQUANTIZE(f1, f2)                                                     \
+  { f1 }
+#else
+#define IFQUANTIZE(f1, f2)                                                     \
+  { f2 }
+#endif
 
 struct Layer {
 public:

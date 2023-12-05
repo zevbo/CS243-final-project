@@ -18,6 +18,8 @@ public:
 
 private:
   F_TY *val;
+  double *weight_residuals;
+  double *bias_residuals;
   double *grad; // equal to the bias grad
   double *weight_grad;
 };

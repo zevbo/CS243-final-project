@@ -9,7 +9,7 @@ CFLAGS  = -g -Wall --std=c++14 -fsanitize=undefined -O2
 # The build target 
 TARGET = main
 # FILES = layer.cpp main.cpp utils.cpp linear.cpp
-FILES = model.cpp utils.cpp layer.cpp msl.cpp linear.cpp main.cpp relu.cpp tanh.cpp
+FILES = model.cpp utils.cpp layer.cpp msl.cpp linear.cpp main.cpp relu.cpp tanh.cpp benchmark1.cpp
 
 all: $(TARGET)
 

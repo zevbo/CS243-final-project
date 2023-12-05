@@ -9,7 +9,7 @@ import tensorflow_model_optimization as tfmot
 
 ModelT = tf.keras.Model
 
-QUANTIZE = False
+QUANTIZE = True
 INPUT_SIZE = 5
 def benchmark_1_model() -> ModelT:
     model = tf.keras.models.Sequential()

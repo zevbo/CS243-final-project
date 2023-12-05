@@ -79,7 +79,7 @@ void run_benchmark1() {
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 1000;
   int num_val = 1000;
-  double lr = 0.01;
+  double lr = 0.001;
   // print_linear_layer(l1);
   test_input(md);
   printf("Loss at start: %f\n", calc_loss(md, num_val));

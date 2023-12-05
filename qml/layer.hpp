@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define QUANTIZE 0
+#define QUANTIZE 1
 
 #if QUANTIZE
 #define F_TY int

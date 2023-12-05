@@ -1,4 +1,4 @@
-#include "benchmark1.hpp"
+#include "benchmark2.hpp"
 #include "linear.hpp"
 #include "model.hpp"
 #include "relu.hpp"
@@ -51,32 +51,18 @@ static void test_input(Model model) {
          (r - correct_output) * (r - correct_output));
 }
 
-void print_linear_layer(Linear *l) {
-  printf("Linear. Weights:  ");
-  for (int i = 0; i < l->output_size * l->input_size; i++) {
-    printf("%f, ", l->weights[i]);
-  }
-  printf(". Bias: ");
-  for (int i = 0; i < l->output_size; i++) {
-    printf("%f, ", l->bias[i]);
-  }
-  printf("\n");
-}
-
-void run_benchmark1() {
+void run_benchmark2() {
   Model md;
   int input_size = 5;
-  double weight_mag = 0.5;
-  double bias_mag = 0.5;
-  Linear *l1 =
-      new Linear(input_size, 1, -weight_mag, weight_mag, -bias_mag, bias_mag);
-  l1->weights[0] = 0.23043269;
-  l1->weights[1] = -0.19739035;
-  l1->weights[2] = -0.08669749;
-  l1->weights[3] = 0.20990819;
-  l1->weights[4] = -0.42102337;
-  l1->bias[0] = 0.2682017;
-  md.layers = std::vector<Layer *>{l1};
+  int l1_size = 10;
+  double weight_mag = 1;
+  double bias_mag = 1;
+  Linear *l1 = new Linear(input_size, l1_size, -weight_mag, weight_mag,
+                          -bias_mag, bias_mag);
+  Relu *r1 = new Relu(l1_size);
+  Linear *l2 =
+      new Linear(l1_size, 1, -weight_mag, weight_mag, -bias_mag, bias_mag);
+  md.layers = std::vector<Layer *>{l1, r1, l2};
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 1000;
   int num_val = 1000;

@@ -1,4 +1,5 @@
 #include "benchmark1.hpp"
+#include "benchmark2.hpp"
 #include "linear.hpp"
 #include "model.hpp"
 #include "relu.hpp"
@@ -116,6 +117,6 @@ void stupid_benchmark() {
 int main() {
   // stupid_benchmark();
   // test_training();
-  run_benchmark1();
+  run_benchmark2();
   // run_test();
 }

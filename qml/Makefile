@@ -4,12 +4,12 @@ CC = clang++
 # compiler flags:
 #  -g     - this flag adds debugging information to the executable file
 #  -Wall  - this flag is used to turn on most compiler warnings
-CFLAGS  = -g -Wall --std=c++14 -fsanitize=undefined -O2
+CFLAGS  = -g -Wall --std=c++14 -O2 # -fsanitize=undefined 
 
 # The build target 
 TARGET = main
 # FILES = layer.cpp main.cpp utils.cpp linear.cpp
-FILES = model.cpp utils.cpp layer.cpp msl.cpp linear.cpp main.cpp relu.cpp tanh.cpp test.cpp  benchmark1.cpp benchmark2.cpp
+FILES = model.cpp utils.cpp layer.cpp msl.cpp linear.cpp main.cpp relu.cpp tanh.cpp test.cpp  benchmark1.cpp benchmark2.cpp benchmark3.cpp
 
 all: $(TARGET)
 

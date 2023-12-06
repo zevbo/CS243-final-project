@@ -41,11 +41,20 @@ F_TY *convert_input(Model *model, double *input) {
   return real_input;
 }
 
-F_TY *Model::forwards(double *input) {
+double *Model::forwards(double *input) {
   F_TY *real_input = convert_input(this, input);
   F_TY *res = this->qforwards(real_input);
   free(real_input);
-  return res;
+  IFQUANTIZE(
+      {
+        int output_sz = this->layers[this->layers.size() - 1]->output_size;
+        double *double_output = (double *)malloc(sizeof(double) * output_sz);
+        for (int i = 0; i < output_sz; i++) {
+          double_output[i] = (double)res[i];
+        }
+        return double_output;
+      },
+      return res;)
 }
 
 F_TY *Model::qforwards(F_TY *input) {
@@ -72,6 +81,11 @@ std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
     double_output[i] = (double)output[i];
   }
   double *loss_grad = msl_grad(output_sz, double_output, correct_output);
+  // printf("Grad: ");
+  // for (int i = 0; i < output_sz; i++) {
+  //   printf("%f, ", loss_grad[i]);
+  // }
+  // printf("\n");
   this->backwards(real_input, loss_grad);
   free(loss_grad);
   this->step(lr);

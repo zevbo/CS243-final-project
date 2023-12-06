@@ -8,7 +8,7 @@ struct Model {
   std::vector<Layer *> layers;
   std::pair<int, int> train_on_input(double *input, double *correct_output,
                                      double lr);
-  F_TY *forwards(double *input);
+  double *forwards(double *input);
 
 protected:
   F_TY *qforwards(F_TY *input);

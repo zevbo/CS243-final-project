@@ -31,12 +31,31 @@ ds_test = ds_test.batch(1)
 ds_test = ds_test.cache()
 ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
 
-
-
+def save_data() -> None:
+    with open("../data/mnist/train", "w") as f:
+        print("Saving data...")
+        for d in ds_train:
+            image: np.ndarray = np.array(d[0])
+            result: np.ndarray = np.array(d[1])
+            image = image.squeeze()
+            np.savetxt(f, image, delimiter=",", newline=",", fmt="%4f")
+            np.savetxt(f, result, delimiter=",", newline=",", fmt="%4f")
+        print("Saved data...")
+        f.write(",|")
+    with open("../data/mnist/val", "w") as f:
+        print("Saving val data...")
+        for d in ds_test:
+            image: np.ndarray = np.array(d[0])
+            result: np.ndarray = np.array(d[1])
+            image = image.squeeze()
+            np.savetxt(f, image, delimiter=",", newline=",", fmt="%4f")
+            np.savetxt(f, result, delimiter=",", newline=",", fmt="%4f")
+        print("Saved val data...")
+        f.write(",|")
 
 ModelT = tf.keras.Model
 
-QUANTIZE = False
+QUANTIZE = True
 def benchmark_3_model() -> ModelT:
     f =  tf.keras.layers.Flatten(input_shape=(28, 28))
     d1 = tf.keras.layers.Dense(units=128, activation='relu')
@@ -101,4 +120,5 @@ def run_benchmark() -> None:
     # print(model(example))
 
 if __name__ == "__main__":
-    run_benchmark()
+    save_data()
+    # run_benchmark()

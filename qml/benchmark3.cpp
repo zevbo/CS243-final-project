@@ -100,7 +100,7 @@ void run_benchmark3() {
   printf("Loss at start: %f\n", calc_loss(md, val_data));
   size_t t1 = microtime();
   //   test_input(md);
-  int num_empochs = 5;
+  int num_empochs = 10;
   for (int i = 0; i < num_empochs; i++) {
     for (std::pair<double *, double *> train_pair : train_data) {
       // printf("Trying with input: %f, %f\n", input[0], input[1]);

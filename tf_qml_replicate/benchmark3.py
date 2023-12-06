@@ -58,7 +58,7 @@ ModelT = tf.keras.Model
 QUANTIZE = True
 def benchmark_3_model() -> ModelT:
     f =  tf.keras.layers.Flatten(input_shape=(28, 28))
-    d1 = tf.keras.layers.Dense(units=128, activation='relu')
+    d1 = tf.keras.layers.Dense(units=128, activation='tanh')
     d2 = tf.keras.layers.Dense(units=10, activation='linear')
     if QUANTIZE: 
         d1 = tfmot.quantization.keras.quantize_annotate_layer(d1)
@@ -99,7 +99,7 @@ def calc_loss(model: ModelT) -> float:
 
 def train_model(model: ModelT) -> None:
     print(f"Loss at start: {calc_loss(model)}")
-    model.fit(ds_train, batch_size= 1, epochs=1, validation_data=ds_test)
+    model.fit(ds_train, batch_size= 1, epochs=2, validation_data=ds_test)
     # print(f"Loss at end: {calc_loss(model, 1000)}")
 
 def run_benchmark() -> None:
@@ -120,5 +120,5 @@ def run_benchmark() -> None:
     # print(model(example))
 
 if __name__ == "__main__":
-    save_data()
-    # run_benchmark()
+    # save_data()
+    run_benchmark()

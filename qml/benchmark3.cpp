@@ -32,7 +32,7 @@ std::vector<std::pair<double *, double *>> read_in_data(char *file,
       if (i == 28 * 28) {
         v = (int)f;
       } else {
-        d[i] = f;
+        d[i] = f * 10;
       }
     }
     double *y = (double *)calloc(10, sizeof(double));
@@ -83,7 +83,7 @@ void run_benchmark3() {
   double bias_mag = 0;
   Linear *l1 = new Linear(input_size, l1_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
-  Relu *r1 = new Relu(l1_size);
+  Tanh *r1 = new Tanh(l1_size, 5, 1);
   Linear *l2 = new Linear(l1_size, output_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
   md.layers = std::vector<Layer *>{l1, r1, l2};

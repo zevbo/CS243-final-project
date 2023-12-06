@@ -32,11 +32,11 @@ std::vector<std::pair<double *, double *>> read_in_data(char *file,
       if (i == 28 * 28) {
         v = (int)f;
       } else {
-        d[i] = f * 10;
+        d[i] = f * 128;
       }
     }
     double *y = (double *)calloc(10, sizeof(double));
-    y[v] = 10;
+    y[v] = 50;
     // printf("V: %d\n", v);
     all_data.push_back(std::pair<double *, double *>(d, y));
     if (stop_early && all_data.size() > 10) {
@@ -79,11 +79,11 @@ void run_benchmark3() {
   int input_size = 28 * 28;
   int l1_size = 128;
   int output_size = 10;
-  double weight_mag = 1;
+  double weight_mag = 2;
   double bias_mag = 0;
   Linear *l1 = new Linear(input_size, l1_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
-  Tanh *r1 = new Tanh(l1_size, 5, 1);
+  Tanh *r1 = new Tanh(l1_size, 5, 5);
   Linear *l2 = new Linear(l1_size, output_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
   md.layers = std::vector<Layer *>{l1, r1, l2};
@@ -100,10 +100,16 @@ void run_benchmark3() {
   printf("Loss at start: %f\n", calc_loss(md, val_data));
   size_t t1 = microtime();
   //   test_input(md);
-  for (std::pair<double *, double *> train_pair : train_data) {
-    // printf("Trying with input: %f, %f\n", input[0], input[1]);
-    md.train_on_input(train_pair.first, train_pair.second, lr);
-    // printf("Did train. Loss %f\n", calc_loss(md, val_data));
+  int num_empochs = 5;
+  for (int i = 0; i < num_empochs; i++) {
+    for (std::pair<double *, double *> train_pair : train_data) {
+      // printf("Trying with input: %f, %f\n", input[0], input[1]);
+      md.train_on_input(train_pair.first, train_pair.second, lr);
+      // printf("Did train. Loss %f\n", calc_loss(md, val_data));
+    }
+    printf("Finished epoch %d\n", i);
+    printf("Loss is %f\n", calc_loss(md, val_data));
+    lr *= 0.7;
   }
   size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, val_data));

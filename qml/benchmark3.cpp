@@ -83,7 +83,7 @@ void run_benchmark3() {
   double bias_mag = 0;
   Linear *l1 = new Linear(input_size, l1_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
-  Tanh *r1 = new Tanh(l1_size, 10, 5);
+  Tanh *r1 = new Tanh(l1_size, 20, 5);
   Linear *l2 = new Linear(l1_size, output_size, -weight_mag, weight_mag,
                           -bias_mag, bias_mag);
   md.layers = std::vector<Layer *>{l1, r1, l2};
@@ -109,7 +109,7 @@ void run_benchmark3() {
     }
     printf("Finished epoch %d\n", i);
     printf("Loss is %f\n", calc_loss(md, val_data));
-    lr *= 0.7;
+    lr *= 0.8;
   }
   size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, val_data));

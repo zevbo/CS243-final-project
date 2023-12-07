@@ -12,6 +12,9 @@ bool isbadf(double d);
 static inline int quantize(float f) { return (int)roundf(f); }
 char *read_full_file(char *file_name);
 
+#define MAX(a, b) (a > b ? a : b)
+#define MIN(a, b) (a < b ? a : b)
+
 #define tassert assert
 
 #endif

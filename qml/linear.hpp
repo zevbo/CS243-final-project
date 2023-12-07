@@ -2,7 +2,9 @@
 #define LINEAR_H
 
 #define RESIDUAL_TY int
-#define MAX_RESIDUAL 1024
+#define MAX_RESIDUAL 256
+#define MAX_TY 127
+#define MIN_TY -127
 
 #include "layer.hpp"
 #include <string.h>

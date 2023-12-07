@@ -68,7 +68,9 @@ inline void update_with_residual(RESIDUAL_TY *res, F_TY *real, double inc) {
         double curr_val = (float)(*res) / MAX_RESIDUAL;
         double new_val = curr_val + inc;
         F_TY real_diff = (F_TY)new_val;
-        *real += real_diff;
+        F_TY final_new_val = *real + real_diff;
+        final_new_val = MIN(MAX(final_new_val, MIN_TY), MAX_TY);
+        *real = final_new_val;
         new_val -= real_diff;
         *res = (RESIDUAL_TY)(new_val * MAX_RESIDUAL);
       },
@@ -88,11 +90,6 @@ void Linear::step(double step_size) {
   size_t s = this->input_size * this->output_size;
   // printf("Linear weight stuff %p: ", this);
   for (int i = 0; i < s; i++) {
-
-    // this->weight_residuals[i] -= step_size * this->weight_grad[i];
-    // int w_diff = (int)this->weight_residuals[i];
-    // this->weights[i] += w_diff;
-    // this->weight_residuals[i] -= w_diff;
     update_with_residual(&this->weight_residuals[i], &this->weights[i],
                          -step_size * this->weight_grad[i]);
     // IFQUANTIZE(

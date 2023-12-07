@@ -90,7 +90,7 @@ void run_benchmark3() {
   double *input = (double *)malloc(input_size * sizeof(double));
   int num_trains = 10000;
   int num_val = 1000;
-  double lr = 0.0001;
+  double lr = 0.0003;
   // print_linear_layer(l1);
   std::vector<std::pair<double *, double *>> val_data =
       read_in_data("../data/mnist/val", false);

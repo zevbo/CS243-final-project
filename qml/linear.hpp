@@ -2,7 +2,7 @@
 #define LINEAR_H
 
 #define RESIDUAL_TY int16_t
-#define MAX_RESIDUAL 1024
+#define MAX_RESIDUAL 127
 #define MAX_TY 127
 #define MIN_TY -127
 

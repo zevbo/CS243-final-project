@@ -1,6 +1,9 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
+#define RESIDUAL_TY int
+#define MAX_RESIDUAL 256
+
 #include "layer.hpp"
 #include <string.h>
 struct Linear : public Layer {
@@ -18,8 +21,8 @@ public:
 
 private:
   F_TY *val;
-  double *weight_residuals;
-  double *bias_residuals;
+  RESIDUAL_TY *weight_residuals;
+  RESIDUAL_TY *bias_residuals;
   double *grad; // equal to the bias grad
   double *weight_grad;
 };

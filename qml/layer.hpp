@@ -8,8 +8,10 @@
 
 #if QUANTIZE
 #define F_TY int
+#define W_TY int16_t
 #else
 #define F_TY double
+#define W_TY double
 #endif
 
 #if QUANTIZE

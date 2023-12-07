@@ -19,7 +19,7 @@ void Linear::apply(F_TY *input) {
   size_t isize = this->input_size;
   for (int i = 0; i < osize; i++) {
     tassert(!isbadf(this->bias[i]));
-    F_TY *w_on = this->weights + i * isize;
+    W_TY *w_on = this->weights + i * isize;
     F_TY r = 0;
     for (int j = 0; j < isize; j++) {
       r += w_on[j] * (input[j]);
@@ -44,7 +44,7 @@ F_TY *Linear::output() { return this->val; }
 
 void Linear::update_input_grad(F_TY *input, double *input_grad) {
   for (int i = 0; i < this->output_size; i++) {
-    F_TY *w_on = this->weights + i * this->input_size;
+    W_TY *w_on = this->weights + i * this->input_size;
     double *w_grad_on = this->weight_grad + i * this->input_size;
     double g = this->grad[i];
     for (int j = 0; j < this->input_size; j++) {
@@ -62,7 +62,7 @@ void Linear::update_input_grad(F_TY *input, double *input_grad) {
   }
 }
 
-inline void update_with_residual(RESIDUAL_TY *res, F_TY *real, double inc) {
+inline void update_with_residual(RESIDUAL_TY *res, W_TY *real, double inc) {
   IFQUANTIZE(
       {
         double curr_val = (float)(*res) / MAX_RESIDUAL;
@@ -124,12 +124,12 @@ Linear::Linear(int input_size, int output_size, double min_weight,
                double max_weight, double min_bias, double max_bias) {
   this->input_size = input_size;
   this->output_size = output_size;
-  this->weights = (F_TY *)malloc(input_size * output_size * sizeof(F_TY));
+  this->weights = (W_TY *)malloc(input_size * output_size * sizeof(W_TY));
   this->weight_residuals =
       (RESIDUAL_TY *)calloc(input_size * output_size, sizeof(RESIDUAL_TY));
   this->weight_grad =
       (double *)malloc(input_size * output_size * sizeof(double));
-  this->bias = (F_TY *)malloc(output_size * sizeof(F_TY));
+  this->bias = (W_TY *)malloc(output_size * sizeof(W_TY));
   this->val = (F_TY *)malloc(output_size * sizeof(F_TY));
   this->grad = (double *)malloc(output_size * sizeof(double));
   this->bias_residuals =

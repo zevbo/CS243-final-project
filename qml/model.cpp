@@ -81,13 +81,6 @@ std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
     double_output[i] = (double)output[i];
   }
   double *loss_grad = msl_grad(output_sz, double_output, correct_output);
-  bool printed = false;
-  for (int i = 0; i < output_sz; i++) {
-    if (loss_grad[i] > 10000) {
-      printed = true;
-      printf("Loss grad %d: %f\n", i, loss_grad[i]);
-    }
-  }
   // printf("Grad: ");
   // for (int i = 0; i < output_sz; i++) {
   //   printf("%f, ", loss_grad[i]);
@@ -96,9 +89,6 @@ std::pair<int, int> Model::train_on_input(double *input, double *correct_output,
   this->backwards(real_input, loss_grad);
   free(loss_grad);
   this->step(lr);
-  if (printed) {
-    printf("But I did this\n");
-  }
   size_t t3 = microtime();
   free(real_input);
   free(double_output);

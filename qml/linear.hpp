@@ -1,7 +1,11 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
+#if QUANTIZE
 #define RESIDUAL_TY int8_t
+#else
+#define RESIDUAL_TY double
+#endif
 #define MAX_RESIDUAL 127
 #define MAX_TY 127
 #define MIN_TY -127

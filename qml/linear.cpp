@@ -74,7 +74,7 @@ inline void update_with_residual(RESIDUAL_TY *res, W_TY *real, double inc) {
         new_val -= real_diff;
         *res = (RESIDUAL_TY)(new_val * MAX_RESIDUAL);
       },
-      { *res += inc; })
+      { *real += inc; })
   // IFQUANTIZE(
   //     {
   //       *res += inc;

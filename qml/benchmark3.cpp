@@ -109,7 +109,7 @@ void run_benchmark3() {
     }
     printf("Finished epoch %d\n", i);
     printf("Loss is %f\n", calc_loss(md, val_data));
-    lr *= 0.8;
+    lr *= 0.85;
   }
   size_t t2 = microtime();
   printf("Loss at end: %f\n", calc_loss(md, val_data));

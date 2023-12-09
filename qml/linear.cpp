@@ -67,23 +67,14 @@ inline void update_with_residual(RESIDUAL_TY *res, W_TY *real, double inc) {
       {
         double curr_val = (float)(*res) / MAX_RESIDUAL;
         double new_val = curr_val + inc;
-        F_TY real_diff = (F_TY)new_val;
-        F_TY final_new_val = *real + real_diff;
+        W_TY real_diff = (W_TY)new_val;
+        W_TY final_new_val = *real + real_diff;
         final_new_val = MIN(MAX(final_new_val, MIN_TY), MAX_TY);
         *real = final_new_val;
         new_val -= real_diff;
         *res = (RESIDUAL_TY)(new_val * MAX_RESIDUAL);
       },
       { *res += inc; })
-  // IFQUANTIZE(
-  //     {
-  //       *res += inc;
-  //       F_TY w_diff = (F_TY)*res;
-  //       *real += w_diff;
-  //       *res -= w_diff;
-  //       // this->weights[i] -= (F_TY)step_size * this->weight_grad[i];
-  //     },
-  //     { this->weights[i] -= (F_TY)step_size * this->weight_grad[i]; })
 }
 
 void Linear::step(double step_size) {
@@ -92,15 +83,6 @@ void Linear::step(double step_size) {
   for (int i = 0; i < s; i++) {
     update_with_residual(&this->weight_residuals[i], &this->weights[i],
                          -step_size * this->weight_grad[i]);
-    // IFQUANTIZE(
-    //     {
-    //       this->weight_residuals[i] -= step_size * this->weight_grad[i];
-    //       F_TY w_diff = (F_TY)this->weight_residuals[i];
-    //       this->weights[i] += w_diff;
-    //       this->weight_residuals[i] -= w_diff;
-    //       // this->weights[i] -= (F_TY)step_size * this->weight_grad[i];
-    //     },
-    //     { this->weights[i] -= (F_TY)step_size * this->weight_grad[i]; })
 
     tassert(!isbadf(this->weights[i]));
   }
@@ -108,15 +90,6 @@ void Linear::step(double step_size) {
   for (int i = 0; i < this->output_size; i++) {
     update_with_residual(&this->bias_residuals[i], &this->bias[i],
                          -step_size * this->grad[i]);
-    // IFQUANTIZE(
-    //     {
-    //       this->bias_residuals[i] -= step_size * this->grad[i];
-    //       F_TY r_diff = (F_TY)this->bias_residuals[i];
-    //       this->bias[i] += (F_TY)r_diff;
-    //       this->bias_residuals[i] -= r_diff;
-    //       // this->bias[i] -= (F_TY)(step_size * this->grad[i]);
-    //     },
-    //     { this->bias[i] -= (F_TY)(step_size * this->grad[i]); })
   }
 }
 

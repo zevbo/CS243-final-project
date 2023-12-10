@@ -98,14 +98,18 @@ def calc_loss(model: ModelT) -> float:
     return loss
 
 def train_model(model: ModelT) -> None:
-    print(f"Loss at start: {calc_loss(model)}")
-    model.fit(ds_train, batch_size= 1, epochs=2, validation_data=ds_test)
+    # print(f"Loss at start: {calc_loss(model)}")
+    num_epochs = 8
+    for _ in range(num_epochs):
+        input("Press any key to cotinue")
+        model.fit(ds_train, batch_size= 1, epochs=1, validation_data=ds_test)
     # print(f"Loss at end: {calc_loss(model, 1000)}")
 
 def run_benchmark() -> None:
-    np.random.seed(0)
-    tf.random.set_seed(0)
-    tf.keras.utils.set_random_seed(0)
+    SEED = 1
+    np.random.seed(SEED)
+    tf.random.set_seed(SEED)
+    tf.keras.utils.set_random_seed(SEED)
     model = benchmark_3_model()
     # print(f"{len(ds_test) = }")
     # print(f"{d.weights = }")

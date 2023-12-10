@@ -7,7 +7,7 @@
 #define QUANTIZE 1
 
 #if QUANTIZE
-#define F_TY int
+#define F_TY double
 #define W_TY int8_t
 #else
 #define F_TY double

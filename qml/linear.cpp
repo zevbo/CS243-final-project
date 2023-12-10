@@ -67,14 +67,14 @@ inline void update_with_residual(RESIDUAL_TY *res, W_TY *real, double inc) {
       {
         double curr_val = (float)(*res) / MAX_RESIDUAL;
         double new_val = curr_val + inc;
-        F_TY real_diff = (F_TY)new_val;
-        F_TY final_new_val = *real + real_diff;
+        W_TY real_diff = (W_TY)new_val;
+        W_TY final_new_val = *real + real_diff;
         final_new_val = MIN(MAX(final_new_val, MIN_TY), MAX_TY);
         *real = final_new_val;
         new_val -= real_diff;
         *res = (RESIDUAL_TY)(new_val * MAX_RESIDUAL);
       },
-      { *res += inc; })
+      { *real += inc; })
   // IFQUANTIZE(
   //     {
   //       *res += inc;
